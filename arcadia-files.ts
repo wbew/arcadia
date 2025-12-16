@@ -1,8 +1,15 @@
 /**
  * Laserfiche WebLink File Fetcher for City of Arcadia
- * 
+ *
+ * @deprecated This file is deprecated. Use the new CLI instead:
+ *   - bun run browse           # Interactive folder browser
+ *   - bun run fetch [folderId] # Fetch folder contents
+ *   - bun run src/cli/index.ts [folderId]  # Legacy behavior
+ *
+ * This file is kept for backward compatibility and will redirect to the new CLI.
+ *
  * Usage: bun run arcadia-files.ts [folderId]
- * 
+ *
  * Examples:
  *   bun run arcadia-files.ts           # Fetches folder 874714 (default)
  *   bun run arcadia-files.ts 123456    # Fetches folder 123456
@@ -18,6 +25,8 @@ interface FolderEntry {
   type: string;
   pageCount?: string;
   template?: string;
+  creationDate?: string;
+  modificationDate?: string;
 }
 
 interface ApiResponse {
@@ -67,14 +76,15 @@ class WebLinkClient {
 
   async fetch(url: string, options: RequestInit = {}): Promise<Response> {
     const fullUrl = this.resolveUrl(url);
-    
+
     const response = await fetch(fullUrl, {
       ...options,
       redirect: "manual",
       headers: {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-        "Accept": "*/*",
-        "Cookie": this.getCookieHeader(),
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+        Accept: "*/*",
+        Cookie: this.getCookieHeader(),
         ...options.headers,
       },
     });
@@ -97,9 +107,13 @@ class WebLinkClient {
     return this.cookies.size > 0;
   }
 
-  async getFolderListing(folderId: number, start = 0, end = 500): Promise<ApiResponse | null> {
+  async getFolderListing(
+    folderId: number,
+    start = 0,
+    end = 500
+  ): Promise<ApiResponse | null> {
     const url = `${BASE_URL}/FolderListingService.aspx/GetFolderListing2`;
-    
+
     const body = {
       repoName: REPO,
       folderId: folderId,
@@ -114,7 +128,7 @@ class WebLinkClient {
       method: "POST",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
-        "Accept": "application/json",
+        Accept: "application/json",
         "X-Requested-With": "XMLHttpRequest",
       },
       body: JSON.stringify(body),
@@ -129,7 +143,9 @@ class WebLinkClient {
     }
   }
 
-  async getAllEntries(folderId: number): Promise<{ folderName: string; entries: FolderEntry[] }> {
+  async getAllEntries(
+    folderId: number
+  ): Promise<{ folderName: string; entries: FolderEntry[] }> {
     const entries: FolderEntry[] = [];
     let folderName = "";
     let start = 0;
@@ -138,9 +154,13 @@ class WebLinkClient {
     let firstFetch = true;
 
     do {
-      const response = await this.getFolderListing(folderId, start, start + pageSize);
+      const response = await this.getFolderListing(
+        folderId,
+        start,
+        start + pageSize
+      );
       const data = response?.data || response?.d;
-      
+
       if (!data) break;
 
       if (firstFetch) {
@@ -151,18 +171,35 @@ class WebLinkClient {
 
       const results = data.results || [];
       const colTypes = data.colTypes || [];
-      
+
       // Find column indices for additional data
-      const pageCountIdx = colTypes.findIndex((c: any) => c.name === "PageCount");
-      const templateIdx = colTypes.findIndex((c: any) => c.name === "TemplateName");
+      const pageCountIdx = colTypes.findIndex(
+        (c: any) => c.name === "PageCount"
+      );
+      const templateIdx = colTypes.findIndex(
+        (c: any) => c.name === "TemplateName"
+      );
+      const creationDateIdx = colTypes.findIndex(
+        (c: any) => c.name === "CreationDate"
+      );
+      const modificationDateIdx = colTypes.findIndex(
+        (c: any) => c.name === "LastModified"
+      );
 
       for (const result of results) {
         entries.push({
           id: result.entryId,
           name: result.name,
           type: getEntryType(result.type),
-          pageCount: pageCountIdx >= 0 ? result.data?.[pageCountIdx] : undefined,
+          pageCount:
+            pageCountIdx >= 0 ? result.data?.[pageCountIdx] : undefined,
           template: templateIdx >= 0 ? result.data?.[templateIdx] : undefined,
+          creationDate:
+            creationDateIdx >= 0 ? result.data?.[creationDateIdx] : undefined,
+          modificationDate:
+            modificationDateIdx >= 0
+              ? result.data?.[modificationDateIdx]
+              : undefined,
         });
       }
 
@@ -184,7 +221,7 @@ function getEntryType(typeNum: number): string {
 
 async function main() {
   const folderId = parseInt(process.argv[2]) || DEFAULT_FOLDER_ID;
-  
+
   console.log("=".repeat(60));
   console.log("Laserfiche WebLink File Fetcher - City of Arcadia");
   console.log("=".repeat(60));
@@ -193,7 +230,7 @@ async function main() {
   console.log("=".repeat(60) + "\n");
 
   const client = new WebLinkClient();
-  
+
   console.log("Initializing session...");
   await client.initSession();
   console.log("Session established.\n");
@@ -207,19 +244,25 @@ async function main() {
   }
 
   // Separate folders and documents
-  const folders = entries.filter(e => e.type === "Folder");
-  const documents = entries.filter(e => e.type !== "Folder");
+  const folders = entries.filter((e) => e.type === "Folder");
+  const documents = entries.filter((e) => e.type !== "Folder");
 
   console.log(`📂 Folder: ${folderName}`);
-  console.log(`   URL: ${BASE_URL}/Browse.aspx?id=${folderId}&dbid=0&repo=${REPO}`);
-  console.log(`   Total: ${entries.length} items (${folders.length} folders, ${documents.length} documents)\n`);
+  console.log(
+    `   URL: ${BASE_URL}/Browse.aspx?id=${folderId}&dbid=0&repo=${REPO}`
+  );
+  console.log(
+    `   Total: ${entries.length} items (${folders.length} folders, ${documents.length} documents)\n`
+  );
 
   if (folders.length > 0) {
     console.log("📁 SUBFOLDERS:");
     console.log("-".repeat(50));
     folders.forEach((entry, i) => {
       console.log(`${String(i + 1).padStart(3)}. ${entry.name}`);
-      console.log(`     ${BASE_URL}/Browse.aspx?id=${entry.id}&dbid=0&repo=${REPO}`);
+      console.log(
+        `     ${BASE_URL}/Browse.aspx?id=${entry.id}&dbid=0&repo=${REPO}`
+      );
     });
     console.log();
   }
@@ -228,9 +271,29 @@ async function main() {
     console.log("📄 DOCUMENTS:");
     console.log("-".repeat(50));
     documents.forEach((entry, i) => {
-      const extra = [entry.pageCount ? `${entry.pageCount} pages` : null, entry.template].filter(Boolean).join(" | ");
-      console.log(`${String(i + 1).padStart(3)}. ${entry.name}${extra ? ` (${extra})` : ""}`);
-      console.log(`     ${BASE_URL}/DocView.aspx?id=${entry.id}&dbid=0&repo=${REPO}`);
+      const extra = [
+        entry.pageCount ? `${entry.pageCount} pages` : null,
+        entry.template,
+      ]
+        .filter(Boolean)
+        .join(" | ");
+      console.log(
+        `${String(i + 1).padStart(3)}. ${entry.name}${
+          extra ? ` (${extra})` : ""
+        }`
+      );
+      console.log(
+        `     ${BASE_URL}/DocView.aspx?id=${entry.id}&dbid=0&repo=${REPO}`
+      );
+      if (entry.creationDate || entry.modificationDate) {
+        const dates = [
+          entry.creationDate ? `Created: ${entry.creationDate}` : null,
+          entry.modificationDate ? `Modified: ${entry.modificationDate}` : null,
+        ]
+          .filter(Boolean)
+          .join(" | ");
+        console.log(`     ${dates}`);
+      }
     });
   }
 
@@ -243,11 +306,11 @@ async function main() {
     folderUrl: `${BASE_URL}/Browse.aspx?id=${folderId}&dbid=0&repo=${REPO}`,
     fetchedAt: new Date().toISOString(),
     totalEntries: entries.length,
-    folders: folders.map(e => ({
+    folders: folders.map((e) => ({
       ...e,
       url: `${BASE_URL}/Browse.aspx?id=${e.id}&dbid=0&repo=${REPO}`,
     })),
-    documents: documents.map(e => ({
+    documents: documents.map((e) => ({
       ...e,
       url: `${BASE_URL}/DocView.aspx?id=${e.id}&dbid=0&repo=${REPO}`,
     })),

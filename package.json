@@ -1,0 +1,23 @@
+{
+  "name": "laserfiche-weblink-client",
+  "version": "0.1.0",
+  "description": "Laserfiche WebLink API client and CLI for accessing public government documents",
+  "type": "module",
+  "scripts": {
+    "cli": "bun run src/cli/index.ts",
+    "browse": "bun run src/cli/index.ts browse",
+    "fetch": "bun run src/cli/index.ts fetch"
+  },
+  "exports": {
+    ".": "./src/lib/index.ts"
+  },
+  "keywords": [
+    "laserfiche",
+    "weblink",
+    "government",
+    "documents",
+    "api-client"
+  ],
+  "author": "",
+  "license": "MIT"
+}

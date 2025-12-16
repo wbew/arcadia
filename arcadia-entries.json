@@ -3,88 +3,108 @@
   "folderName": "12/16/2025",
   "repository": "CityofArcadia",
   "folderUrl": "https://laserfiche.arcadiaca.gov/WebLink/Browse.aspx?id=874714&dbid=0&repo=CityofArcadia",
-  "fetchedAt": "2025-12-16T20:50:28.522Z",
+  "fetchedAt": "2025-12-16T21:22:59.993Z",
   "totalEntries": 10,
   "folders": [],
   "documents": [
     {
       "id": 874740,
       "name": "Agenda - December 16, 2025",
-      "type": "Unknown(-2)",
+      "type": "Document",
       "pageCount": 7,
       "template": "CC - Agendas",
+      "creationDate": "12/12/2025 12:04:57 AM",
+      "modificationDate": "12/12/2025 12:05:03 AM",
       "url": "https://laserfiche.arcadiaca.gov/WebLink/DocView.aspx?id=874740&dbid=0&repo=CityofArcadia"
     },
     {
       "id": 874718,
       "name": "Item 08a - Multi-Family Residential Condominium Development at 101 W. Huntington Drive",
-      "type": "Unknown(-2)",
+      "type": "Document",
       "pageCount": 689,
       "template": "CC - Agendas",
+      "creationDate": "12/11/2025 7:23:12 PM",
+      "modificationDate": "12/11/2025 7:38:01 PM",
       "url": "https://laserfiche.arcadiaca.gov/WebLink/DocView.aspx?id=874718&dbid=0&repo=CityofArcadia"
     },
     {
       "id": 874716,
       "name": "Item 08b - Community Development Block Grant Funds",
-      "type": "Unknown(-2)",
+      "type": "Document",
       "pageCount": 29,
       "template": "CC - Agendas",
+      "creationDate": "12/11/2025 7:15:50 PM",
+      "modificationDate": "12/11/2025 7:16:11 PM",
       "url": "https://laserfiche.arcadiaca.gov/WebLink/DocView.aspx?id=874716&dbid=0&repo=CityofArcadia"
     },
     {
       "id": 874717,
       "name": "Item 08c - Pasadena Showcase House of Design Event",
-      "type": "Unknown(-2)",
+      "type": "Document",
       "pageCount": 56,
       "template": "CC - Agendas",
+      "creationDate": "12/11/2025 7:17:04 PM",
+      "modificationDate": "12/11/2025 7:17:40 PM",
       "url": "https://laserfiche.arcadiaca.gov/WebLink/DocView.aspx?id=874717&dbid=0&repo=CityofArcadia"
     },
     {
       "id": 874721,
       "name": "Item 10a - Regular Meeting Minutes of December 2, 2025",
-      "type": "Unknown(-2)",
+      "type": "Document",
       "pageCount": 4,
       "template": "CC - Agendas",
+      "creationDate": "12/11/2025 7:38:49 PM",
+      "modificationDate": "12/11/2025 7:38:51 PM",
       "url": "https://laserfiche.arcadiaca.gov/WebLink/DocView.aspx?id=874721&dbid=0&repo=CityofArcadia"
     },
     {
       "id": 874722,
       "name": "Item 10b - New Human Resources Assistant Classification",
-      "type": "Unknown(-2)",
+      "type": "Document",
       "pageCount": 68,
       "template": "CC - Agendas",
+      "creationDate": "12/11/2025 7:39:08 PM",
+      "modificationDate": "12/11/2025 7:39:47 PM",
       "url": "https://laserfiche.arcadiaca.gov/WebLink/DocView.aspx?id=874722&dbid=0&repo=CityofArcadia"
     },
     {
       "id": 874723,
       "name": "Item 10c - Storm Drain MOU with Temple City",
-      "type": "Unknown(-2)",
+      "type": "Document",
       "pageCount": 15,
       "template": "CC - Agendas",
+      "creationDate": "12/11/2025 7:41:57 PM",
+      "modificationDate": "12/11/2025 7:42:07 PM",
       "url": "https://laserfiche.arcadiaca.gov/WebLink/DocView.aspx?id=874723&dbid=0&repo=CityofArcadia"
     },
     {
       "id": 874724,
       "name": "Item 10d - Interim Transportation Services Support",
-      "type": "Unknown(-2)",
+      "type": "Document",
       "pageCount": 22,
       "template": "CC - Agendas",
+      "creationDate": "12/11/2025 7:43:23 PM",
+      "modificationDate": "12/11/2025 7:43:37 PM",
       "url": "https://laserfiche.arcadiaca.gov/WebLink/DocView.aspx?id=874724&dbid=0&repo=CityofArcadia"
     },
     {
       "id": 874732,
       "name": "Item 10e - Annual Development Impact Fee Report FY2024-25",
-      "type": "Unknown(-2)",
+      "type": "Document",
       "pageCount": 9,
       "template": "CC - Agendas",
+      "creationDate": "12/11/2025 9:21:22 PM",
+      "modificationDate": "12/11/2025 9:21:26 PM",
       "url": "https://laserfiche.arcadiaca.gov/WebLink/DocView.aspx?id=874732&dbid=0&repo=CityofArcadia"
     },
     {
       "id": 874726,
       "name": "Item 10f - Grant for Purchase of Mobile Radios",
-      "type": "Unknown(-2)",
+      "type": "Document",
       "pageCount": 12,
       "template": "CC - Agendas",
+      "creationDate": "12/11/2025 7:46:27 PM",
+      "modificationDate": "12/11/2025 7:46:33 PM",
       "url": "https://laserfiche.arcadiaca.gov/WebLink/DocView.aspx?id=874726&dbid=0&repo=CityofArcadia"
     }
   ]
