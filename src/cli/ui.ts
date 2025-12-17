@@ -2,6 +2,7 @@
  * CLI UI helpers for displaying folders and documents
  */
 
+import * as readline from "readline";
 import type { FolderEntry } from "../lib/types";
 
 /**
@@ -54,24 +55,65 @@ export function displayDocuments(documents: FolderEntry[]): void {
 }
 
 /**
- * Prompt for user input
+ * Prompt for user input using readline
+ * @param prompt - The prompt to display
+ * @param rl - Optional readline interface (reuse for multiple prompts)
  */
-export async function promptInput(prompt: string): Promise<string> {
-  process.stdout.write(prompt);
+export async function promptInput(
+  prompt: string,
+  rl?: readline.Interface
+): Promise<string> {
+  const shouldClose = !rl;
+  let readlineInterface = rl;
 
-  const buffer = new Uint8Array(1024);
-  const stdin = Bun.stdin.stream();
-  const reader = stdin.getReader();
-
-  try {
-    const { value } = await reader.read();
-    if (value) {
-      return new TextDecoder().decode(value).trim();
-    }
-    return "";
-  } finally {
-    reader.releaseLock();
+  // If readline interface was closed or doesn't exist, create a new one
+  if (!readlineInterface || (readlineInterface as any).closed) {
+    readlineInterface = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
   }
+
+  return new Promise((resolve) => {
+    try {
+      readlineInterface.question(prompt, (answer: string) => {
+        if (shouldClose) {
+          readlineInterface.close();
+        }
+        resolve(answer.trim());
+      });
+    } catch (error) {
+      // If question fails, recreate interface and try again
+      readlineInterface = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      });
+      readlineInterface.question(prompt, (answer: string) => {
+        if (shouldClose) {
+          readlineInterface.close();
+        }
+        resolve(answer.trim());
+      });
+    }
+  });
+}
+
+/**
+ * Create a readline interface for interactive prompts
+ */
+export async function createReadlineInterface(): Promise<readline.Interface> {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false, // Prevent auto-close on EOF
+  });
+
+  // Handle stdin close gracefully
+  process.stdin.on("end", () => {
+    // Don't close the interface immediately
+  });
+
+  return rl;
 }
 
 /**

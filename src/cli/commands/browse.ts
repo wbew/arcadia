@@ -9,6 +9,7 @@ import {
   displayCommands,
   promptInput,
   parseSelection,
+  createReadlineInterface,
 } from "../ui";
 import { fetchCommand } from "./fetch";
 
@@ -43,6 +44,8 @@ export async function browseCommand(
     history: [],
   };
 
+  // Create a single readline interface for the entire session
+  const rl = await createReadlineInterface();
   let running = true;
 
   while (running) {
@@ -85,7 +88,7 @@ export async function browseCommand(
       state.selectedFolders.size > 0
         ? ` [${state.selectedFolders.size} selected]`
         : "";
-    const input = await promptInput(`> ${selectionHint} `);
+    const input = await promptInput(`> ${selectionHint} `, rl);
 
     // Handle commands
     const command = input.toLowerCase().trim();
@@ -166,4 +169,7 @@ export async function browseCommand(
       console.log("\nInvalid command. Use [number], [a]ll, [c]lear, [b]ack, [f]etch, or [q]uit.");
     }
   }
+
+  // Clean up readline interface
+  rl.close();
 }
